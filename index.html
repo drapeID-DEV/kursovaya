@@ -44,19 +44,32 @@
             </a>
         </div>
         <div class="container">
-            <section class="experience">
-                <ul class="experience_list">
-                    <li><button class="experience_list_item experience_list_item_active">Consistent</button></li>
-                    <li><button class="experience_list_item">Customer oriented</button></li>
-                    <li><button class="experience_list_item">Innovative</button></li>
-                    <li><button class="experience_list_item">Business oriented</button></li>
+            <section class="actions-block">
+                <ul class="actions_list">
+                    <li><button class="actions_list_item actions_list_item_active">Tasks</button></li>
+                    <li><button class="actions_list_item">Weather</button></li>
+                    <li><button class="actions_list_item">Innovative</button></li>
+                    <li><button class="actions_list_item">Business oriented</button></li>
                 </ul>
-                <div class="experience_info">
-                    <h3 class="experience_header">We turn the idea of legal services</h3>
-                    <p class="experience_text">Consolidating many years of experience and practice, the company's
-                        lawyers accompany complex projects and achieve a number of important decisions for the industry.
-                        Many of them form the practice of applying the law of the sea in Ukraine.
-                    </p>
+                <div class="tasks-block">
+                    <div class="create-task-input">
+                        <label for="task-text">Task text</label>
+                        <input type="text" id="task-text" name="task-text"/>
+                        <button class="create-task-btn">Create</button>
+                    </div>
+                    <div class="your-tasks">
+                        <h3 class="tasks-header">Your tasks:</h1>
+                        <div class="filters">
+                            <p class="filter-text">Filter:</p>
+                            <select name="task-filter" id="task-filter">
+                                <option value="all">All</option>
+                                <option value="in-progress">In progress</option>
+                                <option value="done">Done</option>
+                                <option value="deleted">Deleted</option>
+                            </select>
+                        </div>
+                        <div class="tasks-container"></div>
+                    </div>
                 </div>
             </section>
             <section class="services"><a class="page_link service_page_link" href="./service.html">services<svg
@@ -116,7 +129,7 @@
         <div></div>
     </div>
     <div class="container">
-
+        <section class="team">
             <div class="team_slider">
                 <div class="slide">
                     <div class="face_image"></div>
@@ -182,7 +195,7 @@
                 <button class="prev-slide-btn slider-btn">Previous</button>
                 <button class="next-slide-btn slider-btn">Next</button>
             </div>
-
+        </section>
     </div>
     <section class="clients">
         <h3 class="clients_header">They already trust us</h3>
@@ -298,6 +311,15 @@
             <button class="info-btn action-btn">OK</button>
         </div>
     </div>
+    <template class="task-template">
+        <div class="task">
+            <p class="existing-task-text">Do homework and mama momo pipi papa pupu</p>
+            <div class="task-controls">
+                <button data-name="complete" class="task-control-btn done-task">Done</button>
+                <button data-name="delete" class="task-control-btn delete-task">Delete</button>
+            </div>
+        </div>
+    </template>
     <script src="./script.js"></script>
 </body>
 
