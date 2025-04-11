@@ -42,9 +42,17 @@ update();
 
 let currentSessionUser = null;
 
+const modalMessage = document.querySelector(`.modal-message`);
+
 const modalContainer = document.querySelector(`.modal-container`);
+modalContainer.addEventListener(`click`, (event) => {
+  const target = event.target;
+  if (target.className !== "modal-container") return;
+  hideElement(modalContainer);
+});
+
 const signInBtn = document.querySelector(`.sign-in-btn`);
-signInBtn.addEventListener(`click`, showModal);
+signInBtn.addEventListener(`click`, () => showElement(modalContainer));
 
 const registrationForm = document.querySelector(`.registration-form`);
 const loginForm = document.querySelector(`.login-form`);
@@ -71,26 +79,21 @@ const accountControls = document.querySelector(`.account-controls`);
 const logoutBtn = document.querySelector(`.logout-btn`);
 logoutBtn.addEventListener(`click`, logout);
 
-function showModal() {
-  modalContainer.style.display = `flex`;
+function showElement(element) {
+  element.classList.remove(`hidden`);
 }
 
-function hideModal() {
-  modalContainer.style.display = `none`;
-}
-
-function showAccountControls() {
-  accountControls.style.display = `flex`;
-  signInBtn.style.display = `none`;
-}
-
-function hideAccountControls() {
-  accountControls.style.display = `none`;
-  signInBtn.style.display = `block`;
+function hideElement(element) {
+  element.classList.add(`hidden`);
 }
 
 function hideInfoMessage() {
   infoContainer.style.display = `none`;
+}
+
+function showInfoMessage(message) {
+  infoMessage.textContent = message;
+  infoContainer.style.display = `flex`;
 }
 
 function logout() {
@@ -98,13 +101,9 @@ function logout() {
   if (tasksContainer.children) {
     Array.from(tasksContainer.children).forEach((element) => element.remove());
   }
-  hideAccountControls();
+  showElement(signInBtn);
+  hideElement(accountControls);
   showInfoMessage(`You have logged out!`);
-}
-
-function showInfoMessage(message) {
-  infoMessage.textContent = message;
-  infoContainer.style.display = `flex`;
 }
 
 function switchToLogin(event) {
@@ -121,41 +120,50 @@ function switchToRegister(event) {
   registrationForm.style.display = `flex`;
 }
 
-function removeErrorMessage() {
-  const prevErrorMessage = document.querySelector(
-    `#${this.id} + .error-message`
-  );
-  if (prevErrorMessage) {
+function throwErrorMessage(currentField, message = "Поле обов’язкове") {
+  const prevErrorMessage = currentField.nextElementSibling;
+  if (
+    prevErrorMessage &&
+    prevErrorMessage.classList.contains("error-message")
+  ) {
     prevErrorMessage.remove();
   }
+
+  const errorDiv = document.createElement("div");
+  errorDiv.classList.add("error-message");
+  errorDiv.innerText = message;
+  currentField.addEventListener(`focus`, removeErrorMessage);
+  currentField.insertAdjacentElement("afterend", errorDiv);
 }
 
-function throwErrorMessage(key, currentInputField) {
-  const errorMessage = document.createElement(`p`);
-  errorMessage.className = `error-message`;
-  errorMessage.textContent = `Please input ${key}*`;
-  currentInputField.insertAdjacentElement("afterend", errorMessage);
-  currentInputField.addEventListener(`focus`, removeErrorMessage);
+function removeErrorMessage(event) {
+  const input = event.target;
+  const error = input.nextElementSibling;
+
+  if (error && error.classList.contains("error-message")) {
+    error.remove();
+  }
+
+  input.removeEventListener("focus", removeErrorMessage);
 }
 
 function validateForm(formData) {
   let formState = true;
 
   for (let key of formData.keys()) {
-    const currentInputField = document.querySelector(`#${key}`);
-    const prevErrorMessage = document.querySelector(`#${key} + .error-message`);
+    const input = document.getElementById(key);
+    const error = input.nextElementSibling;
 
-    if (!currentInputField.value.trim()) {
-      if (!prevErrorMessage) {
-        throwErrorMessage(key, currentInputField);
-        formState = false;
-        continue;
-      } else {
-        formState = false;
-        continue;
+    if (!input.value.trim()) {
+      throwErrorMessage(input);
+      formState = false;
+    } else {
+      if (error && error.classList.contains("error-message")) {
+        error.remove();
       }
     }
   }
+
   return formState;
 }
 
@@ -182,7 +190,7 @@ function submitRegistration(event) {
 
     localStorage.setItem(userData.username, JSON.stringify(userData));
     registrationForm.reset();
-    hideModal();
+    hideElement(modalContainer);
 
     showInfoMessage(`Successful registration!`);
   }
@@ -204,8 +212,9 @@ function submitLogin(event) {
       if (existingUser.password === loginPassword) {
         currentSessionUser = loginUsername;
         loginForm.reset();
-        hideModal();
-        showAccountControls();
+        hideElement(modalContainer);
+        hideElement(signInBtn);
+        showElement(accountControls);
         renderTasks(existingUser.tasks);
 
         showInfoMessage(`Successful login`);
@@ -236,12 +245,12 @@ function modifyTask(event) {
   if (target.tagName != "BUTTON") return;
 
   const currentTime = new Date();
-  const formattedDate = currentTime.toLocaleString('uk-UA', {
-    day: '2-digit',
-    month: '2-digit',
-    year: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit'
+  const formattedDate = currentTime.toLocaleString("uk-UA", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
   });
 
   const userData = JSON.parse(localStorage.getItem(currentSessionUser));
@@ -273,11 +282,9 @@ function modifyTask(event) {
 
 function filterTasks(event) {
   const selectedFilter = event.target.value;
-  console.log(selectedFilter);
 
   const userData = JSON.parse(localStorage.getItem(currentSessionUser));
   const userTasks = userData.tasks;
-  console.log(userTasks);
 
   switch (selectedFilter) {
     case "all":
@@ -363,4 +370,56 @@ function renderTasks(tasksToRender) {
   tasksToRender.forEach((task) => {
     createTask(task);
   });
+}
+
+//CONTACT US
+
+const validators = {
+  fullname: {
+    validate: (value) => /^[A-Za-zА-Яа-яІіЇїЄєҐґ\s]{5,}$/.test(value),
+    message: 'Будь ласка, введіть коректне ПІБ (мінімум 5 символів).'
+  },
+  phone: {
+    validate: (value) => /^(\+380\d{9}|0\d{9})$/.test(value),
+    message: 'Будь ласка, введіть коректний номер телефону.'
+  },
+  email: {
+    validate: (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value),
+    message: 'Будь ласка, введіть коректну адресу електронної пошти.'
+  },
+  theme: {
+    validate: (value) => value.length >= 4,
+    message: 'Будь ласка, введіть тему (мінімум 4 символи).'
+  },
+  description: {
+    validate: (value) => value.length >= 10,
+    message: 'Будь ласка, опишіть звернення детальніше (мінімум 10 символів).'
+  }
+};
+
+const contactForm = document.querySelector(`.contact-form`);
+
+const contactBtn = document.querySelector(`.contact-btn`);
+contactBtn.addEventListener(`click`, sendMessageHandler);
+
+function sendMessageHandler(event) {
+  event.preventDefault();
+
+  const formData = new FormData(contactForm);
+  let isFormValid = true;
+
+  for (const [key, value] of formData.entries()) {
+    const currentInputField = document.getElementById(key);
+    const validator = validators[key];
+
+    if (!value.trim() || !validator.validate(value.trim())) {
+      throwErrorMessage(currentInputField, validator.message);
+      isFormValid = false;
+    }
+  }
+
+  if (isFormValid) {
+    contactForm.reset();
+    showInfoMessage('Форма успішно відправлена!');
+  }
 }
