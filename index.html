@@ -46,77 +46,78 @@
         <div class="container">
             <section class="actions-block">
                 <ul class="actions_list">
-                    <li><button class="actions_list_item actions_list_item_active">Tasks</button></li>
-                    <li><button class="actions_list_item">Weather</button></li>
-                    <li><button class="actions_list_item">Innovative</button></li>
-                    <li><button class="actions_list_item">Business oriented</button></li>
+                    <li><button class="actions_list_item" data-name="tasks">Завдання</button></li>
+                    <li><button class="actions_list_item" data-name="weather">Погода</button></li>
+                    <li><button class="actions_list_item" data-name="exchange">Курс валют</button></li>
                 </ul>
-                <div class="tasks-block">
-                    <div class="create-task-input">
-                        <label for="task-text">Task text</label>
-                        <input type="text" id="task-text" name="task-text"/>
-                        <button class="create-task-btn">Create</button>
-                    </div>
-                    <div class="your-tasks">
-                        <h3 class="tasks-header">Your tasks:</h1>
-                        <div class="filters">
-                            <p class="filter-text">Filter:</p>
-                            <select name="task-filter" id="task-filter">
-                                <option value="all">All</option>
-                                <option value="in-progress">In progress</option>
-                                <option value="done">Done</option>
-                                <option value="deleted">Deleted</option>
-                            </select>
+                <div class="info-tabs-container">
+                    <div class="tasks-block">
+                        <div class="create-task-input">
+                            <label for="task-text">Текст завдання</label>
+                            <input type="text" id="task-text" name="task-text"/>
+                            <button class="create-task-btn">Створити</button>
                         </div>
-                        <div class="tasks-container"></div>
+                        <div class="your-tasks">
+                            <h3 class="tasks-header">Твої завдання:</h1>
+                            <div class="filters">
+                                <p class="filter-text">Фільтри:</p>
+                                <select name="task-filter" id="task-filter">
+                                    <option value="all">Всі</option>
+                                    <option value="in-progress">В роботі</option>
+                                    <option value="done">Виконано</option>
+                                    <option value="deleted">Видалено</option>
+                                </select>
+                            </div>
+                            <div class="tasks-container"></div>
+                        </div>
+                    </div>
+                    <div class="exchange-block hidden">
+                        <table class="exchange-table">
+                            <tr>
+                                <th class="table-header table-field">Купівля</th>
+                                <th class="table-header table-field"></th>
+                                <th class="table-header table-field">Продаж</th>
+                            </tr>
+                        </table>
                     </div>
                 </div>
             </section>
-            <section class="services"><a class="page_link service_page_link" href="./service.html">services<svg
-                        width="8" height="11" viewBox="0 0 8 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M1.5 1L6 5.5L1.5 10" stroke="currentColor" stroke-width="2" />
-                    </svg></a>
-                <h1 class="services_header">What can we do better than others?</h1>
+            <section class="services">
+                <a class="page_link service_page_link" href="./service.html">послуги<svg
+                    width="8" height="11" viewBox="0 0 8 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M1.5 1L6 5.5L1.5 10" stroke="currentColor" stroke-width="2" />
+                </svg></a>
+                <h1 class="services_header">Чому варто навчатися інвестувати з нами?</h1>
                 <div class="services_cards_container">
-                    <div class="service_card"><img class="service_card_image" src="./images/service1.svg"
-                            alt="service-image">
-                        <h3 class="service_card_header">IT and e-commerce</h3>
-                        <p class="service_card_text">An endless stream of contracts, tax issues, labor relations,
-                            corporate papers - legal work distracts you from doing business. But there is not much work
-                            to do to hire an in-house lawyer.</p>
+                    <div class="service_card">
+                        <img class="service_card_image" src="./images/service1.svg" alt="service-image">
+                        <h3 class="service_card_header">DeFi та стейкінг</h3>
+                        <p class="service_card_text">Отримуйте пасивний дохід через ліквідносні пули, фармінг та інші механізми Web3.</p>
                     </div>
-                    <div class="service_card"><img class="service_card_image" src="./images/service2.svg"
-                            alt="service-image">
-                        <h3 class="service_card_header">Comprehensive daily legal support</h3>
-                        <p class="service_card_text">In addition, over time, the work will become the same type and
-                            uninteresting for a full-time lawyer. And we know very well how difficult it is to find a
-                            good candidate with experience in the field of information technology in Ukraine.</p>
+                    <div class="service_card">
+                        <img class="service_card_image" src="./images/service2.svg" alt="service-image">
+                        <h3 class="service_card_header">Стратегії торгівлі</h3>
+                        <p class="service_card_text">Scalping, swing-трейдинг, HODL - підберемо оптимальний підхід під ваш ризик-профіль.</p>
                     </div>
-                    <div class="service_card"><img class="service_card_image" src="./images/service3.svg"
-                            alt="service-image">
-                        <h3 class="service_card_header">Structuring corporate relationships</h3>
-                        <p class="service_card_text">Instead of just providing legal services, we will hire a lawyer or
-                            a whole team that will fit into the daily life of your company.</p>
+                    <div class="service_card">
+                        <img class="service_card_image" src="./images/service3.svg" alt="service-image">
+                        <h3 class="service_card_header">Технічний аналіз</h3>
+                        <p class="service_card_text">Вивчіть читання графіків, індикатори та паттерни. Навчіться прогнозувати рух цін як професіонал.</p>
                     </div>
-                    <div class="service_card"><img class="service_card_image" src="./images/service4.svg"
-                            alt="service-image">
-                        <h3 class="service_card_header">Building contractual relations</h3>
-                        <p class="service_card_text">Once a week, or week after month, you have your own lawyer by your
-                            side. Anyone in the company can catch it at the coffee maker and just talk about current
-                            affairs instead of waiting for update status.</p>
+                    <div class="service_card">
+                        <img class="service_card_image" src="./images/service4.svg" alt="service-image">
+                        <h3 class="service_card_header">Персональний ментор</h3>
+                        <p class="service_card_text">Індивідуальні консультації з досвідченим трейдером для швидкого прогресу.</p>
                     </div>
-                    <div class="service_card"><img class="service_card_image" src="./images/service5.svg"
-                            alt="service-image">
-                        <h3 class="service_card_header">Protection of business, intellectual property</h3>
-                        <p class="service_card_text">And all the other time he will work on new diverse projects, so he
-                            will definitely not stop in professional development. One way or another, all Axon Partners
-                            will work for you instead of a corporate lawyer.</p>
+                    <div class="service_card">
+                        <img class="service_card_image" src="./images/service5.svg" alt="service-image">
+                        <h3 class="service_card_header">Основи криптовалют</h3>
+                        <p class="service_card_text">Навчіться розуміти блокчейн, гаманці та безпеку. Опануйте базові принципи роботи з BTC, ETH та іншими монетами.</p>
                     </div>
-                    <div class="service_card"><img class="service_card_image" src="./images/service6.svg"
-                            alt="service-image">
-                        <h3 class="service_card_header">Judicial representation</h3>
-                        <p class="service_card_text">Is it a small, medium-sized company or a market leader? Local
-                            business or multinational company? Do you have your own legal department or not?</p>
+                    <div class="service_card">
+                        <img class="service_card_image" src="./images/service6.svg" alt="service-image">
+                        <h3 class="service_card_header">Управління ризиками</h3>
+                        <p class="service_card_text">Навчимо, як захистити капітал: стоп-лоси, диверсифікація, правильне розміщення активів.</p>
                     </div>
                 </div>
             </section>
@@ -133,85 +134,87 @@
             <div class="team_slider">
                 <div class="slide">
                     <div class="face_image"></div>
-                    <div class="team_info"><a class="page_link team_page_link" href="">команда<svg width="8" height="11"
-                                viewBox="0 0 8 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <div class="team_info">
+                        <a class="page_link team_page_link" href="">команда
+                            <svg width="8" height="11" viewBox="0 0 8 11" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M1.5 1L6 5.5L1.5 10" stroke="currentColor" stroke-width="2" />
-                            </svg></a>
-                        <h3 class="team_text">Ми звикли брати на себе відповідальність та завжди гарантуємо чесну,
-                            вчасну допомогу, навіть у ситуаціях, коли більшість безсилі.</h3>
-                        <p class="team_member">Олександр Олександровський</p>
-                        <p class="member_position">Керуючий партнер</p>
+                            </svg>
+                        </a>
+                        <h3 class="team_text">Ми допомагаємо людям зрозуміти криптовалюту — не як ризик, а як можливість створити фінансову свободу.</h3>
+                        <p class="team_member">Ігор Максименко</p>
+                        <p class="member_position">Засновник та CEO</p>
                     </div>
                 </div>
                 <div class="slide">
                     <div class="face_image"></div>
-                    <div class="team_info"><a class="page_link team_page_link" href="">команда<svg width="8" height="11"
-                                viewBox="0 0 8 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <div class="team_info">
+                        <a class="page_link team_page_link" href="">команда
+                            <svg width="8" height="11" viewBox="0 0 8 11" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M1.5 1L6 5.5L1.5 10" stroke="currentColor" stroke-width="2" />
-                            </svg></a>
-                        <h3 class="team_text">Ми .</h3>
-                        <p class="team_member">Олександр Олександровський</p>
-                        <p class="member_position">Керуючий партнер</p>
+                            </svg>
+                        </a>
+                        <h3 class="team_text">Крипта — це не магія. Це знання, стратегія і холодний розрахунок. І цьому ми навчаємо щодня.</h3>
+                        <p class="team_member">Олексій Левчук</p>
+                        <p class="member_position">Головний тренер з DeFi</p>
                     </div>
                 </div>
                 <div class="slide">
                     <div class="face_image"></div>
-                    <div class="team_info"><a class="page_link team_page_link" href="">команда<svg width="8" height="11"
-                                viewBox="0 0 8 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <div class="team_info">
+                        <a class="page_link team_page_link" href="">команда
+                            <svg width="8" height="11" viewBox="0 0 8 11" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M1.5 1L6 5.5L1.5 10" stroke="currentColor" stroke-width="2" />
-                            </svg></a>
-                        <h3 class="team_text">Ми звикли брати на себе відповідальність та завжди гарантуємо чесну,
-                            вчасну допомогу, навіть у ситуаціях, коли більшість безсилі.</h3>
-                        <p class="team_member">Олександр Олександровський</p>
-                        <p class="member_position">Керуючий партнер</p>
+                            </svg>
+                        </a>
+                        <h3 class="team_text">Навчаю, як створити свій перший криптопортфель та не втратити гроші на початку.</h3>
+                        <p class="team_member">Олександр Нікітін</p>
+                        <p class="member_position">Інвестиційний аналітик</p>
                     </div>
                 </div>
                 <div class="slide">
                     <div class="face_image"></div>
-                    <div class="team_info"><a class="page_link team_page_link" href="">команда<svg width="8" height="11"
-                                viewBox="0 0 8 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <div class="team_info">
+                        <a class="page_link team_page_link" href="">команда
+                            <svg width="8" height="11" viewBox="0 0 8 11" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M1.5 1L6 5.5L1.5 10" stroke="currentColor" stroke-width="2" />
-                            </svg></a>
-                        <h3 class="team_text">Ми звикли брати на себе відповідальність та завжди гарантуємо чесну,
-                            вчасну допомогу, навіть у ситуаціях, коли більшість безсилі.</h3>
-                        <p class="team_member">Олександр Олександровський</p>
-                        <p class="member_position">Керуючий партнер</p>
+                            </svg>
+                        </a>
+                        <h3 class="team_text">З нами ви не просто вчитесь — ви створюєте власну фінансову стратегію на роки вперед.</h3>
+                        <p class="team_member">Максим Коваль</p>
+                        <p class="member_position">Куратор освітніх програм</p>
                     </div>
                 </div>
                 <div class="slide">
                     <div class="face_image"></div>
-                    <div class="team_info"><a class="page_link team_page_link" href="">команда<svg width="8" height="11"
-                                viewBox="0 0 8 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <div class="team_info">
+                        <a class="page_link team_page_link" href="">команда
+                            <svg width="8" height="11" viewBox="0 0 8 11" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M1.5 1L6 5.5L1.5 10" stroke="currentColor" stroke-width="2" />
-                            </svg></a>
-                        <h3 class="team_text">Ми звикли брати на себе відповідальність та завжди гарантуємо чесну,
-                            вчасну допомогу, навіть у ситуаціях, коли більшість безсилі.</h3>
-                        <p class="team_member">Олександр Олександровський</p>
-                        <p class="member_position">Керуючий партнер</p>
+                            </svg>
+                        </a>
+                        <h3 class="team_text">Моя мета — щоб кожен студент міг впевнено працювати з криптобіржами та уникати шахрайства.</h3>
+                        <p class="team_member">Марина Ткаченко</p>
+                        <p class="member_position">Експерт з безпеки криптоактивів</p>
                     </div>
                 </div>
             </div>
             <div class="slider_controls">
-                <button class="prev-slide-btn slider-btn">Previous</button>
-                <button class="next-slide-btn slider-btn">Next</button>
+                <button class="prev-slide-btn slider-btn">Назад</button>
+                <button class="next-slide-btn slider-btn">Вперед</button>
             </div>
         </section>
     </div>
     <section class="clients">
-        <h3 class="clients_header">They already trust us</h3>
+        <h3 class="clients_header">Наші партнери</h3>
         <div class="clients_container">
-            <div class="client_card"><img class="client_logo" src="./images/client1.webp" alt="client-logo"></div>
-            <div class="client_card"><img class="client_logo" src="./images/client2.webp" alt="client-logo"></div>
-            <div class="client_card"><img class="client_logo" src="./images/client3.webp" alt="client-logo"></div>
-            <div class="client_card"><img class="client_logo" src="./images/client4.webp" alt="client-logo"></div>
-            <div class="client_card"><img class="client_logo" src="./images/client5.webp" alt="client-logo"></div>
-            <div class="client_card"><img class="client_logo" src="./images/client6.webp" alt="client-logo"></div>
-            <div class="client_card"><img class="client_logo" src="./images/client7.webp" alt="client-logo"></div>
-            <div class="client_card"><img class="client_logo" src="./images/client8.webp" alt="client-logo"></div>
-            <div class="client_card"><img class="client_logo" src="./images/client9.webp" alt="client-logo"></div>
-            <div class="client_card"><img class="client_logo" src="./images/client10.webp" alt="client-logo"></div>
-            <div class="client_card"><img class="client_logo" src="./images/client11.webp" alt="client-logo"></div>
-            <div class="client_card"><img class="client_logo" src="./images/client12.webp" alt="client-logo"></div>
+            <div class="client_card"><img class="client_logo" src="./images/partner1.png" alt="client-logo"></div>
+            <div class="client_card"><img class="client_logo" src="./images/partner2.png" alt="client-logo"></div>
+            <div class="client_card"><img class="client_logo" src="./images/partner3.png" alt="client-logo"></div>
+            <div class="client_card"><img class="client_logo" src="./images/partner4.png" alt="client-logo"></div>
+            <div class="client_card"><img class="client_logo" src="./images/partner5.png" alt="client-logo"></div>
+            <div class="client_card"><img class="client_logo" src="./images/partner6.png" alt="client-logo"></div>
+            <div class="client_card"><img class="client_logo" src="./images/partner7.png" alt="client-logo"></div>
+            <div class="client_card"><img class="client_logo" src="./images/partner8.png" alt="client-logo"></div>
         </div>
     </section>
     <section class="publications">
@@ -282,8 +285,8 @@
             <div class="contact_info">
                 <div class="upper_block">
                     <div class="address_block">
-                        <h3 class="footer_address">Kyiv, Mechnikova str, 14/1</h3>
-                        <div class="dot footer_dot"></div><a class="page_link map_link" href="">On map</a>
+                        <h3 class="footer_address">Київ, Мечнікова, 14/1</h3>
+                        <div class="dot footer_dot"></div><a class="page_link map_link" href="">На карті</a>
                     </div>
                 </div>
                 <div class="contacts_block"><a class="footer_facebook_btn" href="#"><svg width="33" height="34"
@@ -302,22 +305,57 @@
     <div class="modal-container hidden">
         <div class="modal-message">
           <form class="action-form registration-form" action="">
-            <h3 class="form-header">Registration</h3>
-            <label for="username">Username</label>
+            <h3 class="form-header">Реєстрація</h3>
+            <label for="username">Ім'я користувача</label>
             <input type="text" id="username" name="username"/>
-            <label for="password">Password</label>
-            <input type="text" id="password" name="password"/>
-            <button class="switch-form-btn open-login-btn">Already have an account?</button>
-            <button class="form-btn submit-registration">Register</button>
+            <label for="password">Пароль</label>
+            <div class="password-block">
+                <input type="password" id="password" name="password"/>
+                <button type="button" class="hide-password" href="">
+                  <svg width="18" height="16" viewBox="0 0 18 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M4.35 12.7748C2.49166 11.5582 1.29166 9.72483 1.29166 8.1165C1.29166 5.38317 4.74166 2.03316 9 2.03316C10.7417 2.03316 12.3583 2.5915 13.6583 3.45816" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M15.5414 5.17516C16.2839 6.11683 16.7164 7.1585 16.7164 8.11683C16.7164 10.8502 13.2581 14.2002 8.99975 14.2002C8.24142 14.2002 7.50058 14.0918 6.80808 13.9002" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M7.13808 9.9725C6.64225 9.48167 6.36475 8.8125 6.36725 8.115C6.36392 6.66083 7.54058 5.47917 8.99558 5.47667C9.69558 5.475 10.3673 5.7525 10.8623 6.2475" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M11.5912 8.58258C11.3962 9.65925 10.5537 10.5034 9.47708 10.7009" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path class="eye-line" d="M15.5764 1.54158L2.43141 14.6866" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+            </div>
+            <label for="repeat-password">Повторіть пароль</label>
+            <div class="password-block">
+                <input type="password" id="repeat-password" name="repeat-password"/>
+                <button type="button" class="hide-password" href="">
+                  <svg width="18" height="16" viewBox="0 0 18 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M4.35 12.7748C2.49166 11.5582 1.29166 9.72483 1.29166 8.1165C1.29166 5.38317 4.74166 2.03316 9 2.03316C10.7417 2.03316 12.3583 2.5915 13.6583 3.45816" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M15.5414 5.17516C16.2839 6.11683 16.7164 7.1585 16.7164 8.11683C16.7164 10.8502 13.2581 14.2002 8.99975 14.2002C8.24142 14.2002 7.50058 14.0918 6.80808 13.9002" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M7.13808 9.9725C6.64225 9.48167 6.36475 8.8125 6.36725 8.115C6.36392 6.66083 7.54058 5.47917 8.99558 5.47667C9.69558 5.475 10.3673 5.7525 10.8623 6.2475" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M11.5912 8.58258C11.3962 9.65925 10.5537 10.5034 9.47708 10.7009" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path class="eye-line" d="M15.5764 1.54158L2.43141 14.6866" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+            </div>
+            <button class="switch-form-btn open-login-btn">Вже є акаунт?</button>
+            <button class="form-btn submit-registration">Заруєструватися</button>
           </form>
           <form class="action-form login-form hidden" action="">
-            <h3 class="form-header">Login</h3>
-            <label for="login-username">Username</label>
+            <h3 class="form-header">Вхід в акаунт</h3>
+            <label for="login-username">Ім'я користувача</label>
             <input type="text" id="login-username" name="login-username"/>
-            <label for="login-password">Password</label>
-            <input type="text" id="login-password" name="login-password"/>
-            <button class="switch-form-btn open-registration-btn">Don't have an account?</button>
-            <button class="form-btn submit-login">Log In</button>
+            <label for="login-password">Пароль</label>
+            <div class="password-block">
+                <input type="password" id="login-password" name="login-password"/>
+                <button type="button" class="hide-password" href="">
+                  <svg width="18" height="16" viewBox="0 0 18 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M4.35 12.7748C2.49166 11.5582 1.29166 9.72483 1.29166 8.1165C1.29166 5.38317 4.74166 2.03316 9 2.03316C10.7417 2.03316 12.3583 2.5915 13.6583 3.45816" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M15.5414 5.17516C16.2839 6.11683 16.7164 7.1585 16.7164 8.11683C16.7164 10.8502 13.2581 14.2002 8.99975 14.2002C8.24142 14.2002 7.50058 14.0918 6.80808 13.9002" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M7.13808 9.9725C6.64225 9.48167 6.36475 8.8125 6.36725 8.115C6.36392 6.66083 7.54058 5.47917 8.99558 5.47667C9.69558 5.475 10.3673 5.7525 10.8623 6.2475" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M11.5912 8.58258C11.3962 9.65925 10.5537 10.5034 9.47708 10.7009" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path class="eye-line" d="M15.5764 1.54158L2.43141 14.6866" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+            </div>
+            <button class="switch-form-btn open-registration-btn">Ще немає акаунту?</button>
+            <button class="form-btn submit-login">Увійти</button>
           </form>
         </div>
     </div>
@@ -329,12 +367,19 @@
     </div>
     <template class="task-template">
         <div class="task">
-            <p class="existing-task-text">Do homework and mama momo pipi papa pupu</p>
+            <p class="existing-task-text"></p>
             <div class="task-controls">
-                <button data-name="complete" class="task-control-btn done-task">Done</button>
-                <button data-name="delete" class="task-control-btn delete-task">Delete</button>
+                <button data-name="complete" class="task-control-btn done-task">Зроблено</button>
+                <button data-name="delete" class="task-control-btn delete-task">Видалити</button>
             </div>
         </div>
+    </template>
+    <template class="exchange-row">
+        <tr class="currency-row">
+            <td class="rate buy-rate table-field"></td>
+            <td class="currency-name table-field"></td>
+            <td class="rate sell-rate table-field"></td>
+        </tr>
     </template>
     <script src="./script.js"></script>
 </body>

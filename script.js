@@ -2,7 +2,14 @@
 
 const prevBtn = document.querySelector(`.prev-slide-btn`);
 const nextBtn = document.querySelector(`.next-slide-btn`);
+const sliderContainer = document.querySelector(`.team`);
 const slideList = document.querySelectorAll(`.slide`);
+const slideImages = document.querySelectorAll(`.face_image`);
+
+slideImages.forEach((element, index) => {
+  element.style.backgroundImage = `url("./images/Team-${index + 1}.png")`;
+});
+
 let index = 0;
 
 prevBtn.addEventListener("click", goPrev);
@@ -35,6 +42,23 @@ function goPrev() {
 }
 
 update();
+
+let autoPlay;
+
+function startAutoplay() {
+  autoPlay = setInterval(function () {
+    nextBtn.click();
+  }, 6000);
+}
+
+startAutoplay();
+
+function stopAutoplay() {
+  clearInterval(autoPlay);
+}
+
+sliderContainer.addEventListener(`mouseout`, startAutoplay);
+sliderContainer.addEventListener(`mouseover`, stopAutoplay);
 
 ///////////////////////
 
@@ -79,6 +103,16 @@ const accountControls = document.querySelector(`.account-controls`);
 const logoutBtn = document.querySelector(`.logout-btn`);
 logoutBtn.addEventListener(`click`, logout);
 
+const hidePasswordBtns = document.querySelectorAll(`.hide-password`);
+
+hidePasswordBtns.forEach(btn => btn.addEventListener(`click`, (event) => {
+  event.preventDefault();
+
+  const passBlock = event.target.closest('.password-block');
+  const passInput = passBlock.querySelector('input');
+  passInput.type = passInput.type === "password" ? "text" : "password";
+}));
+
 function showElement(element) {
   element.classList.remove(`hidden`);
 }
@@ -103,7 +137,7 @@ function logout() {
   }
   showElement(signInBtn);
   hideElement(accountControls);
-  showInfoMessage(`You have logged out!`);
+  showInfoMessage(`Ви вийшли за акаунту!`);
 }
 
 function switchToLogin(event) {
@@ -152,15 +186,10 @@ function validateForm(formData) {
 
   for (let key of formData.keys()) {
     const input = document.getElementById(key);
-    const error = input.nextElementSibling;
 
     if (!input.value.trim()) {
       throwErrorMessage(input);
       formState = false;
-    } else {
-      if (error && error.classList.contains("error-message")) {
-        error.remove();
-      }
     }
   }
 
@@ -178,11 +207,17 @@ function submitRegistration(event) {
     const username = formData.get(`username`);
 
     if (localStorage.getItem(username) !== null) {
-      showInfoMessage(`Username already exists!`);
+      showInfoMessage(`Таке ім'я вже зайнято!`);
       return;
     }
 
     const password = formData.get(`password`);
+    const repeatPassword = formData.get(`repeat-password`);
+
+    if (password !== repeatPassword) {
+      showInfoMessage(`Паролі не співпадають!`);
+      return;
+    }
 
     userData.id = +new Date();
     userData.username = username;
@@ -192,7 +227,7 @@ function submitRegistration(event) {
     registrationForm.reset();
     hideElement(modalContainer);
 
-    showInfoMessage(`Successful registration!`);
+    showInfoMessage(`Ви успішно зареєструвались!`);
   }
 }
 
@@ -205,6 +240,7 @@ function submitLogin(event) {
   if (formIsValid) {
     const loginUsername = formData.get(`login-username`);
     const loginPassword = formData.get(`login-password`);
+    console.log(loginPassword)
 
     if (loginUsername in localStorage) {
       const existingUser = JSON.parse(localStorage.getItem(loginUsername));
@@ -217,15 +253,44 @@ function submitLogin(event) {
         showElement(accountControls);
         renderTasks(existingUser.tasks);
 
-        showInfoMessage(`Successful login`);
+        showInfoMessage(`Ви увійшли в акаунт!`);
       } else {
-        showInfoMessage(`Incorrect username or password!`);
+        showInfoMessage(`Невірний логін або пароль!`);
       }
     } else {
-      showInfoMessage(`User not found!`);
+      showInfoMessage(`Користувача не знайдено!`);
     }
   }
 }
+
+//SWITCH INFO TABS
+
+const tasksBlock = document.querySelector(`.tasks-block`);
+const exchangeBlock = document.querySelector(`.exchange-block`);
+
+const actionsList = document.querySelector(`.actions_list`);
+actionsList.addEventListener(`click`, switchTabs)
+
+const tabsContainer = document.querySelector(`.info-tabs-container`);
+
+function switchTabs(event) {
+  const target = event.target;
+
+  if(target.tagName != `BUTTON`) return;
+
+  Array.from(tabsContainer.children).forEach(block => hideElement(block));
+  const targetTab = target.getAttribute(`data-name`);
+
+  switch(targetTab) {
+    case "tasks":
+      showElement(tasksBlock);
+      break;
+    case "exchange":
+      showElement(exchangeBlock);
+      break;
+  }
+}
+
 
 // TASKS BLOCK
 
@@ -301,7 +366,7 @@ function filterTasks(event) {
 
 function handleNewTaskCreate() {
   if (!currentSessionUser) {
-    showInfoMessage(`You have to login to create a task!`);
+    showInfoMessage(`Спочатку увійдіть, щоб створити завдання!`);
     return;
   }
 
@@ -311,7 +376,7 @@ function handleNewTaskCreate() {
   }
 
   if (!taskInput.value.trim()) {
-    showInfoMessage(`Task text can't be empty!`);
+    showInfoMessage(`Текст завдання не може бути порожнім!`);
     return;
   }
 
@@ -324,7 +389,7 @@ function handleNewTaskCreate() {
   renderTasks(currentUserData.tasks);
   taskFilter.value = "all";
   taskInput.value = ``;
-  showInfoMessage(`New task created!`);
+  showInfoMessage(`Нове завдання створено!`);
 }
 
 function createTask(currentTask) {
@@ -348,12 +413,12 @@ function createTask(currentTask) {
       break;
     case "deleted":
       taskContent.style.textDecoration = `line-through`;
-      taskControls.innerHTML = `<p>Deleted</p><br>
+      taskControls.innerHTML = `<p>Видалено</p><br>
       ${currentTask.time}`;
       tasksContainer.appendChild(taskClone);
       break;
     case "done":
-      taskControls.innerHTML = `<p>Done</p><br>
+      taskControls.innerHTML = `<p>Виконано</p><br>
       ${currentTask.time}`;
       tasksContainer.appendChild(taskClone);
       break;
@@ -372,29 +437,64 @@ function renderTasks(tasksToRender) {
   });
 }
 
+// PRIVAT
+
+const exchangeTable = document.querySelector(`.exchange-table`);
+const exchangeTemplate = document.querySelector(`.exchange-row`);
+const privatUrl = 'http://localhost:7777/proxy?url=https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5';
+
+    async function getRates() {
+      try {
+        const response = await fetch(privatUrl);
+        const data = await response.json();
+
+        data.forEach(rate => {
+          const exchangeClone = exchangeTemplate.content.cloneNode(true);
+          const currencyRow = exchangeClone.querySelector(`.currency-row`);
+
+          const buyRate = currencyRow.querySelector(`.buy-rate`);
+          buyRate.textContent = `${parseFloat(rate.buy).toFixed(2)}₴`;
+
+          const sellRate = currencyRow.querySelector(`.sell-rate`);
+          sellRate.textContent = `${parseFloat(rate.sale).toFixed(2)}₴`;
+
+          const currencyName = currencyRow.querySelector(`.currency-name`);
+          currencyName.textContent = rate.ccy;
+
+          exchangeTable.appendChild(exchangeClone);
+        });
+
+      } catch (err) {
+        console.error('Помилка завантаження курсу валюти:', err);
+      }
+    }
+
+    getRates();
+
+
 //CONTACT US
 
 const validators = {
   fullname: {
     validate: (value) => /^[A-Za-zА-Яа-яІіЇїЄєҐґ\s]{5,}$/.test(value),
-    message: 'Будь ласка, введіть коректне ПІБ (мінімум 5 символів).'
+    message: "Будь ласка, введіть коректне ПІБ (мінімум 5 символів).",
   },
   phone: {
     validate: (value) => /^(\+380\d{9}|0\d{9})$/.test(value),
-    message: 'Будь ласка, введіть коректний номер телефону.'
+    message: "Будь ласка, введіть коректний номер телефону.",
   },
   email: {
     validate: (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value),
-    message: 'Будь ласка, введіть коректну адресу електронної пошти.'
+    message: "Будь ласка, введіть коректну адресу електронної пошти.",
   },
   theme: {
     validate: (value) => value.length >= 4,
-    message: 'Будь ласка, введіть тему (мінімум 4 символи).'
+    message: "Будь ласка, введіть тему (мінімум 4 символи).",
   },
   description: {
     validate: (value) => value.length >= 10,
-    message: 'Будь ласка, опишіть звернення детальніше (мінімум 10 символів).'
-  }
+    message: "Будь ласка, опишіть звернення детальніше (мінімум 10 символів).",
+  },
 };
 
 const contactForm = document.querySelector(`.contact-form`);
@@ -420,6 +520,6 @@ function sendMessageHandler(event) {
 
   if (isFormValid) {
     contactForm.reset();
-    showInfoMessage('Форма успішно відправлена!');
+    showInfoMessage("Форма успішно відправлена!");
   }
 }

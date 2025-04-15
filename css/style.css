@@ -166,12 +166,6 @@ button {
     color: #f0145a;
     cursor: pointer;
 }
-.actions_list_item_active {
-    -webkit-background-clip: text;
-    background-clip: text;
-    background-image: linear-gradient(90.13deg, #ef8080 0.84%, #f0145a 99.96%);
-    color: transparent;
-}
 .tasks-block {
     display: flex;
     align-items: center;
@@ -192,7 +186,7 @@ label[for="task-text"] {
     font-size: 20px;
     font-weight: 500;
     transition: all 0.3s linear;
-    width: 100px;
+    width: 140px;
     height: 30px;
     border-radius: 10px;
     &:hover {
@@ -227,6 +221,7 @@ label[for="task-text"] {
 .tasks-container {
     max-height: 100%;
     height: 300px;
+    min-width: 500px;
     overflow-x: hidden;
     overflow-y: auto;
     background-color: #FFF;
@@ -477,43 +472,43 @@ label[for="task-text"] {
     width: 25%;
 }
 .client_logo {
-    max-width: 100%;
+    max-width: 70%;
 }
 .client_card:first-child {
-    background-color: #1c4280;
+    background-color: #000000;
 }
 .client_card:nth-child(2) {
-    background-color: #143646;
+    background-color: #dcf3f9;
 }
 .client_card:nth-child(3) {
-    background-color: #f48b30;
-}
-.client_card:nth-child(4) {
     background-color: #9e4dc3;
 }
+.client_card:nth-child(4) {
+    background-color: #e2e2e4;
+    .client_logo {
+        max-height: 100%;
+    }
+}
 .client_card:nth-child(5) {
-    background-color: #fd9339;
+    background-color: #c71c36;
+    .client_logo {
+        max-height: 120%;
+    }
 }
 .client_card:nth-child(6) {
     background-color: #e2e2e4;
+    .client_logo {
+        max-height: 100%;
+    }
 }
 .client_card:nth-child(7) {
     background-color: #c71c36;
+    .client_logo {
+        max-height: 100%;
+    }
 }
 .client_card:nth-child(8) {
     background-color: #dcf3f9;
-}
-.client_card:nth-child(9) {
-    background-color: #eaeaea;
-}
-.client_card:nth-child(10) {
-    background-color: #282240;
-}
-.client_card:nth-child(11) {
-    background-color: #1d4568;
-}
-.client_card:nth-child(12) {
-    background-color: #000;
 }
 .publications {
     background-color: #f5f5fa;
@@ -836,6 +831,39 @@ label {
     margin-right: 0;
     box-shadow: 0px 0px 20px 0px #24A3FF80;
 }
+.password-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: fit-content;
+    position: relative;
+}
+
+.hide-password {
+    position: absolute;
+    background: transparent;
+    border: 0;
+    top: 8px;
+    right: 15px;
+    &:hover {
+        cursor: pointer;
+    }
+}
+
+.table-field {
+    color: #FFF;
+    text-align: center;
+    padding: 20px;
+    font-size: 30px;
+}
+.currency-name {
+    font-weight: 700;
+}
+.rate {
+    font-weight: 500;
+    color: #f0145a;
+}
+
 .hidden {
     display: none;
 }
@@ -857,19 +885,9 @@ label {
     }
 }
 @media screen and (max-width: 1440px) {
-    .clients {
-        margin-bottom: 0;
+    .actions_list {
+        justify-content: space-between;
     }
-    .h_logo_container {
-        height: 800px;
-        width: 800px;
-    }
-    .header {
-        height: 810px;
-        margin-bottom: 60px;
-    }
-}
-@media screen and (max-width: 1200px) {
     .actions-block {
         align-items: center;
         display: flex;
@@ -894,6 +912,17 @@ label {
         text-align: center;
         width: -moz-max-content;
         width: max-content;
+    }
+    .clients {
+        margin-bottom: 0;
+    }
+    .h_logo_container {
+        height: 800px;
+        width: 800px;
+    }
+    .header {
+        height: 810px;
+        margin-bottom: 60px;
     }
 }
 @media screen and (max-width: 1024px) {
@@ -977,6 +1006,9 @@ label {
     .task {
         gap: 150px;
     }
+    .tasks-container {
+        min-width: 400px;
+    }
     .account-controls {
         margin-top: 20px;
     }
@@ -1016,11 +1048,20 @@ label {
     }
 }
 @media screen and (max-width: 540px) {
+    .table-field {
+        font-size: 25px;
+    }
+    .account-controls {
+        gap: 0;
+    }
     .modal-message {
         max-width: 300px;
     }
     .task {
         gap: 100px;
+    }
+    .tasks-container {
+        min-width: 300px;
     }
     .h_logo_container {
         height: 600px;
@@ -1062,16 +1103,11 @@ label {
         margin-bottom: 30px;
     }
 }
-@media screen and (max-width: 370px) {
+@media screen and (max-width: 380px) {
+    .face_image {
+        max-height: 300px;
+    }
     .client_card {
         width: 100%;
-    }
-    .client_card:nth-child(10),
-    .client_card:nth-child(11),
-    .client_card:nth-child(12),
-    .client_card:nth-child(7),
-    .client_card:nth-child(8),
-    .client_card:nth-child(9) {
-        display: none;
     }
 }
