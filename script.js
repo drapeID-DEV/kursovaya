@@ -105,13 +105,15 @@ logoutBtn.addEventListener(`click`, logout);
 
 const hidePasswordBtns = document.querySelectorAll(`.hide-password`);
 
-hidePasswordBtns.forEach(btn => btn.addEventListener(`click`, (event) => {
-  event.preventDefault();
+hidePasswordBtns.forEach((btn) =>
+  btn.addEventListener(`click`, (event) => {
+    event.preventDefault();
 
-  const passBlock = event.target.closest('.password-block');
-  const passInput = passBlock.querySelector('input');
-  passInput.type = passInput.type === "password" ? "text" : "password";
-}));
+    const passBlock = event.target.closest(".password-block");
+    const passInput = passBlock.querySelector("input");
+    passInput.type = passInput.type === "password" ? "text" : "password";
+  })
+);
 
 function showElement(element) {
   element.classList.remove(`hidden`);
@@ -240,7 +242,7 @@ function submitLogin(event) {
   if (formIsValid) {
     const loginUsername = formData.get(`login-username`);
     const loginPassword = formData.get(`login-password`);
-    console.log(loginPassword)
+    console.log(loginPassword);
 
     if (loginUsername in localStorage) {
       const existingUser = JSON.parse(localStorage.getItem(loginUsername));
@@ -267,30 +269,33 @@ function submitLogin(event) {
 
 const tasksBlock = document.querySelector(`.tasks-block`);
 const exchangeBlock = document.querySelector(`.exchange-block`);
+const weatherBlock = document.querySelector(`.weather-block`);
 
 const actionsList = document.querySelector(`.actions_list`);
-actionsList.addEventListener(`click`, switchTabs)
+actionsList.addEventListener(`click`, switchTabs);
 
 const tabsContainer = document.querySelector(`.info-tabs-container`);
 
 function switchTabs(event) {
   const target = event.target;
 
-  if(target.tagName != `BUTTON`) return;
+  if (target.tagName != `BUTTON`) return;
 
-  Array.from(tabsContainer.children).forEach(block => hideElement(block));
+  Array.from(tabsContainer.children).forEach((block) => hideElement(block));
   const targetTab = target.getAttribute(`data-name`);
 
-  switch(targetTab) {
+  switch (targetTab) {
     case "tasks":
       showElement(tasksBlock);
       break;
     case "exchange":
       showElement(exchangeBlock);
       break;
+    case "weather":
+      showElement(weatherBlock);
+      break;
   }
 }
-
 
 // TASKS BLOCK
 
@@ -441,36 +446,101 @@ function renderTasks(tasksToRender) {
 
 const exchangeTable = document.querySelector(`.exchange-table`);
 const exchangeTemplate = document.querySelector(`.exchange-row`);
-const privatUrl = 'http://localhost:7777/proxy?url=https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5';
+const currencySelect = document.getElementById("currency-select");
 
-    async function getRates() {
-      try {
-        const response = await fetch(privatUrl);
-        const data = await response.json();
+const today = new Date();
+const formattedDate = today.toLocaleDateString("uk-UA").replaceAll("/", ".");
+const privatUrl = `http://localhost:7777/proxy?url=https://api.privatbank.ua/p24api/exchange_rates?date=${formattedDate}`;
 
-        data.forEach(rate => {
-          const exchangeClone = exchangeTemplate.content.cloneNode(true);
-          const currencyRow = exchangeClone.querySelector(`.currency-row`);
+async function getRate() {
+  try {
+    const response = await fetch(privatUrl);
+    const data = await response.json();
+    const rates = data.exchangeRate;
 
-          const buyRate = currencyRow.querySelector(`.buy-rate`);
-          buyRate.textContent = `${parseFloat(rate.buy).toFixed(2)}₴`;
-
-          const sellRate = currencyRow.querySelector(`.sell-rate`);
-          sellRate.textContent = `${parseFloat(rate.sale).toFixed(2)}₴`;
-
-          const currencyName = currencyRow.querySelector(`.currency-name`);
-          currencyName.textContent = rate.ccy;
-
-          exchangeTable.appendChild(exchangeClone);
-        });
-
-      } catch (err) {
-        console.error('Помилка завантаження курсу валюти:', err);
+    rates.forEach((rate) => {
+      if (rate.saleRate && rate.purchaseRate) {
+        const currencyOption = document.createElement("option");
+        currencyOption.value = rate.currency;
+        currencyOption.textContent = rate.currency;
+        currencySelect.appendChild(currencyOption);
       }
-    }
+    });
 
-    getRates();
+    currencySelect.addEventListener("change", () => {
+      const prevRate = document.querySelector(`.currency-row`);
+      if (prevRate) prevRate.remove();
 
+      const rate = rates.find(
+        (currentRate) => currentRate.currency === currencySelect.value
+      );
+
+      if (rate) {
+        const exchangeClone = exchangeTemplate.content.cloneNode(true);
+        const currencyRow = exchangeClone.querySelector(`.currency-row`);
+
+        const buyRate = currencyRow.querySelector(`.buy-rate`);
+        buyRate.textContent = `${parseFloat(rate.purchaseRate).toFixed(2)}₴`;
+
+        const sellRate = currencyRow.querySelector(`.sell-rate`);
+        sellRate.textContent = `${parseFloat(rate.saleRate).toFixed(2)}₴`;
+
+        const currencyName = currencyRow.querySelector(`.currency-name`);
+        currencyName.textContent = rate.currency;
+
+        exchangeTable.appendChild(exchangeClone);
+      }
+    });
+
+    currencySelect.value = "USD";
+    currencySelect.dispatchEvent(new Event("change"));
+  } catch (err) {
+    console.log("Помилка завантаження курсів валют!", err);
+  }
+}
+
+getRate();
+
+// WEATHER TAB
+
+const weatherApiKey = "63991adcc0b6438c1d46d015771abc79";
+const lat = 46.4825;
+const lon = 30.7233;
+
+async function getWeather() {
+  try {
+    const res = await fetch(
+      `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&exclude=minutely,hourly,daily,alerts&units=metric&lang=ua&appid=${weatherApiKey}`
+    );
+    const data = await res.json();
+
+    const iconData = data.current.weather[0].icon;
+    const iconUrl = `https://openweathermap.org/img/wn/${iconData}@2x.png`;
+    const descriptionData = data.current.weather[0].description;
+    const tempData = data.current.temp;
+    const humidityData = data.current.humidity;
+    const windData = data.current.wind_speed;
+
+    const iconBlock = weatherBlock.querySelector(`.weather-icon`);
+    iconBlock.src = iconUrl;
+
+    const descriptionBlock = weatherBlock.querySelector(`.weather-description`);
+    descriptionBlock.textContent = descriptionData;
+
+    const temperatureBlock = weatherBlock.querySelector(`.temperature`);
+    temperatureBlock.textContent = `${tempData.toFixed(1)}°С`;
+
+    const humidityBlock = weatherBlock.querySelector(`.humidity`);
+    humidityBlock.textContent = `Вологість: ${humidityData}%`;
+
+    const speedBlock = weatherBlock.querySelector(`.wind-speed`);
+    speedBlock.textContent = `Швидкість вітру: ${windData}м/с`
+  } catch (err) {
+    console.log("Помилка завантаження ПОГОДИ!", err);
+  }
+}
+
+getWeather();
 
 //CONTACT US
 
