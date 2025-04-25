@@ -24,21 +24,19 @@ function update() {
 function goNext() {
   if (index < slideList.length - 1) {
     index++;
-    update();
   } else {
     index = 0;
-    update();
   }
+  update();
 }
 
 function goPrev() {
   if (index > 0) {
     index--;
-    update();
   } else {
     index = slideList.length - 1;
-    update();
   }
+  update();
 }
 
 update();
@@ -172,6 +170,19 @@ function throwErrorMessage(currentField, message = "Поле обов’язко
   currentField.insertAdjacentElement("afterend", errorDiv);
 }
 
+function validateForm(formData) {
+  let formState = true;
+  for (let key of formData.keys()) {
+    const input = document.getElementById(key);
+
+    if (!input.value.trim()) {
+      throwErrorMessage(input);
+      formState = false;
+    }
+  }
+  return formState;
+}
+
 function removeErrorMessage(event) {
   const input = event.target;
   const error = input.nextElementSibling;
@@ -183,22 +194,16 @@ function removeErrorMessage(event) {
   input.removeEventListener("focus", removeErrorMessage);
 }
 
-function validateForm(formData) {
-  let formState = true;
-
-  for (let key of formData.keys()) {
-    const input = document.getElementById(key);
-
-    if (!input.value.trim()) {
-      throwErrorMessage(input);
-      formState = false;
-    }
-  }
-
-  return formState;
+async function hashPassword(password) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(password);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  return hashHex;
 }
 
-function submitRegistration(event) {
+async function submitRegistration(event) {
   event.preventDefault();
   let userData = {};
 
@@ -213,17 +218,31 @@ function submitRegistration(event) {
       return;
     }
 
-    const password = formData.get(`password`);
-    const repeatPassword = formData.get(`repeat-password`);
+    const passwordInput = document.getElementById("password");
+    const password = passwordInput.value.trim();
+    const repeatPasswordInput = document.getElementById("repeat-password");
+    const repeatPassword = repeatPasswordInput.value.trim();
+
+    if (
+      !/^(?=.*[A-Z])[A-Za-z\d@#$%()_+\-=\[\]{}|;:'",.<>\/?]{8,16}$/.test(
+        password
+      )
+    ) {
+      throwErrorMessage(
+        passwordInput,
+        "Має містити мінімум 1 велику\nлітеру та 8-16 символів"
+      );
+      return;
+    }
 
     if (password !== repeatPassword) {
-      showInfoMessage(`Паролі не співпадають!`);
+      throwErrorMessage(repeatPasswordInput, "Паролі не співпадають");
       return;
     }
 
     userData.id = +new Date();
     userData.username = username;
-    userData.password = password;
+    userData.password = await hashPassword(password);
 
     localStorage.setItem(userData.username, JSON.stringify(userData));
     registrationForm.reset();
@@ -233,7 +252,7 @@ function submitRegistration(event) {
   }
 }
 
-function submitLogin(event) {
+async function submitLogin(event) {
   event.preventDefault();
 
   const formData = new FormData(loginForm);
@@ -241,8 +260,7 @@ function submitLogin(event) {
 
   if (formIsValid) {
     const loginUsername = formData.get(`login-username`);
-    const loginPassword = formData.get(`login-password`);
-    console.log(loginPassword);
+    const loginPassword = await hashPassword(formData.get(`login-password`));
 
     if (loginUsername in localStorage) {
       const existingUser = JSON.parse(localStorage.getItem(loginUsername));
@@ -503,44 +521,44 @@ getRate();
 
 // WEATHER TAB
 
-const weatherApiKey = "MY-KEY";
-const lat = 46.4825;
-const lon = 30.7233;
+// const weatherApiKey = "63991adcc0b6438c1d46d015771abc79";
+// const lat = 46.4825;
+// const lon = 30.7233;
 
-async function getWeather() {
-  try {
-    const res = await fetch(
-      `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&exclude=minutely,hourly,daily,alerts&units=metric&lang=ua&appid=${weatherApiKey}`
-    );
-    const data = await res.json();
+// async function getWeather() {
+//   try {
+//     const res = await fetch(
+//       `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&exclude=minutely,hourly,daily,alerts&units=metric&lang=ua&appid=${weatherApiKey}`
+//     );
+//     const data = await res.json();
+//     console.log(data)
+//     const iconData = data.current.weather[0].icon;
+//     const iconUrl = `https://openweathermap.org/img/wn/${iconData}@2x.png`;
+//     const descriptionData = data.current.weather[0].description;
+//     const tempData = data.current.temp;
+//     const humidityData = data.current.humidity;
+//     const windData = data.current.wind_speed;
 
-    const iconData = data.current.weather[0].icon;
-    const iconUrl = `https://openweathermap.org/img/wn/${iconData}@2x.png`;
-    const descriptionData = data.current.weather[0].description;
-    const tempData = data.current.temp;
-    const humidityData = data.current.humidity;
-    const windData = data.current.wind_speed;
+//     const iconBlock = weatherBlock.querySelector(`.weather-icon`);
+//     iconBlock.src = iconUrl;
 
-    const iconBlock = weatherBlock.querySelector(`.weather-icon`);
-    iconBlock.src = iconUrl;
+//     const descriptionBlock = weatherBlock.querySelector(`.weather-description`);
+//     descriptionBlock.textContent = descriptionData;
 
-    const descriptionBlock = weatherBlock.querySelector(`.weather-description`);
-    descriptionBlock.textContent = descriptionData;
+//     const temperatureBlock = weatherBlock.querySelector(`.temperature`);
+//     temperatureBlock.textContent = `${tempData.toFixed(1)}°С`;
 
-    const temperatureBlock = weatherBlock.querySelector(`.temperature`);
-    temperatureBlock.textContent = `${tempData.toFixed(1)}°С`;
+//     const humidityBlock = weatherBlock.querySelector(`.humidity`);
+//     humidityBlock.textContent = `Вологість: ${humidityData}%`;
 
-    const humidityBlock = weatherBlock.querySelector(`.humidity`);
-    humidityBlock.textContent = `Вологість: ${humidityData}%`;
+//     const speedBlock = weatherBlock.querySelector(`.wind-speed`);
+//     speedBlock.textContent = `Швидкість вітру: ${windData}м/с`
+//   } catch (err) {
+//     console.log("Помилка завантаження погоди!", err);
+//   }
+// }
 
-    const speedBlock = weatherBlock.querySelector(`.wind-speed`);
-    speedBlock.textContent = `Швидкість вітру: ${windData}м/с`
-  } catch (err) {
-    console.log("Помилка завантаження ПОГОДИ!", err);
-  }
-}
-
-getWeather();
+// getWeather();
 
 //CONTACT US
 
@@ -572,11 +590,31 @@ const contactForm = document.querySelector(`.contact-form`);
 const contactBtn = document.querySelector(`.contact-btn`);
 contactBtn.addEventListener(`click`, sendMessageHandler);
 
-function sendMessageHandler(event) {
+const BOT_TOKEN = "8026405556:AAFUvr0C6Gj_emy24bAgp7ujmIxY-1z7B4o";
+const CHAT_ID = "431893485";
+
+async function sendMessageToTelegram(message) {
+  const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+
+  await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      chat_id: CHAT_ID,
+      text: message,
+      parse_mode: "HTML"
+    })
+  });
+}
+
+async function sendMessageHandler(event) {
   event.preventDefault();
 
   const formData = new FormData(contactForm);
   let isFormValid = true;
+  let message = "<b>Нове повідомлення з форми:</b>\n";
 
   for (const [key, value] of formData.entries()) {
     const currentInputField = document.getElementById(key);
@@ -585,11 +623,178 @@ function sendMessageHandler(event) {
     if (!value.trim() || !validator.validate(value.trim())) {
       throwErrorMessage(currentInputField, validator.message);
       isFormValid = false;
+    } else {
+      message += `<b>${key}:</b> ${value.trim()}\n`;
     }
   }
 
   if (isFormValid) {
-    contactForm.reset();
-    showInfoMessage("Форма успішно відправлена!");
+    try {
+      await sendMessageToTelegram(message);
+      contactForm.reset();
+      showInfoMessage("Форма успішно відправлена!");
+    } catch (error) {
+      console.error("Помилка надсилання до Telegram:", error);
+      showInfoMessage("Сталася помилка при надсиланні повідомлення.");
+    }
   }
+}
+
+// PRODUCT SYSTEM
+
+const userCart = [];
+
+const catalog = [
+  {
+    name: "Crypto Start",
+    description:
+      "Базовий курс для тих, хто тільки починає вивчати криптовалюту. Ви дізнаєтесь про блокчейн, біткоїн, ефіріум, криптогаманці та безпечні методи купівлі активів. Ідеально підходить для новачків без технічного досвіду.",
+    price: 1500,
+    image: "./images/publication1.webp",
+  },
+  {
+    name: "Crypto Pro",
+    description:
+      "Поглиблений курс для тих, хто вже знайомий з основами. Містить аналіз ринку, DeFi, стейкінг, ICO та побудову інвестиційного портфеля. Допоможе приймати обґрунтовані рішення на практиці.",
+    price: 3200,
+    image: "./images/publication2.webp",
+  },
+  {
+    name: "Crypto Mindset",
+    description:
+      "Курс про те, як контролювати емоції при роботі з криптовалютою. Ви дізнаєтесь, як уникати паніки, FOMO і помилок на тлі стресу. Підійде всім, хто хоче інвестувати з холодною головою.",
+    price: 950,
+    image: "./images/publication3.webp",
+  },
+  {
+    name: "Webinar Pack",
+    description:
+      "Щомісячний доступ до вебінарів з аналізом ринку, нових монет та інсайдів. Вебінари проводять практики та запрошені експерти. Актуальна інформація завжди під рукою.",
+    price: 500,
+    image: "./images/publication1.webp",
+  },
+  {
+    name: "Individual",
+    description:
+      "Один-на-один з аналітиком ви сформуєте власну інвестиційну стратегію. Враховуються ваші цілі, бюджет і рівень ризику. Після консультації ви отримаєте готовий покроковий план.",
+    price: 2800,
+    image: "./images/publication2.webp",
+  },
+  {
+    name: "Crypto Mastery",
+    description:
+      "Комплексний курс, що охоплює усі ключові теми — від технологій до оподаткування. Тривалість — 6 тижнів, є тести та сертифікат. Після завершення ви зможете впевнено працювати на ринку.",
+    price: 6500,
+    image: "./images/publication3.webp",
+  },
+];
+
+const prodTemplate = document.querySelector(`.product-template`);
+const productsContainer = document.querySelector(`.product-cards-container`);
+
+catalog.forEach((product, index) => {
+  const productClone = prodTemplate.content.cloneNode(true);
+  const productCard = productClone.querySelector(`.product-card`);
+  productCard.setAttribute(`data-id`, index);
+
+  const productImage = productCard.querySelector(`.prod-image-container`);
+  productImage.style.backgroundImage = `url("${product.image}")`;
+
+  const productName = productCard.querySelector(`.prod-name`);
+  productName.textContent = product.name;
+
+  const productPrice = productCard.querySelector(`.prod-price`);
+  productPrice.textContent = `₴${product.price}`;
+
+  const productDescription = productCard.querySelector(`.prod-description`);
+  productDescription.textContent = product.description;
+
+  const addToCartBtn = productCard.querySelector(`.add-to-cart`);
+  addToCartBtn.addEventListener(`click`, addToCartHandler);
+
+  productsContainer.appendChild(productCard);
+});
+
+// CART
+
+const cartContainer = document.querySelector(`.cart-container`);
+cartContainer.addEventListener(`click`, (event) => {
+  const target = event.target;
+  if (target.className !== "cart-container") return;
+  hideElement(cartContainer);
+});
+
+const openCartBtn = document.querySelector(`.open-cart-btn`);
+openCartBtn.addEventListener(`click`, () => {
+  if (userCart.length == 0) {
+    showInfoMessage(`Ви нічого не додали до свого кошику!`);
+    return;
+  }
+  showElement(cartContainer);
+});
+
+const cartContent = document.querySelector(`.cart-content`);
+const cartTotal = cartContent.querySelector(`.cart-total`);
+const cartProducts = cartContent.querySelector(`.cart-products-container`);
+const cartProdTemplate = document.querySelector(`.cart-product-template`);
+
+function calculateCartTotal() {
+  const totalPrice = userCart.reduce((total, productId) => {
+    const product = catalog[productId];
+    return total + product.price;
+  }, 0);
+  cartTotal.textContent = `Усього до сплати: ₴${totalPrice}`;
+  return totalPrice;
+}
+
+function addToCartHandler(event) {
+  const target = event.target;
+  const currentProduct = target.closest(`.product-card`);
+  const productId = currentProduct.getAttribute(`data-id`);
+
+  if (userCart.includes(productId)) {
+    showInfoMessage(`Цей продукт вже в кошику!`);
+    return;
+  }
+
+  userCart.push(productId);
+  renderProductInCart(productId);
+  calculateCartTotal();
+  showInfoMessage(`Продукт додано!`);
+}
+
+function renderProductInCart(productId) {
+  const productData = catalog[productId];
+
+  const cartProdClone = cartProdTemplate.content.cloneNode(true);
+  const cartProduct = cartProdClone.querySelector(`.cart-product`);
+  cartProduct.setAttribute(`data-id`, productId);
+
+  const prodName = cartProduct.querySelector(`.cart-product-name`);
+  prodName.textContent = productData.name;
+
+  const prodPrice = cartProduct.querySelector(`.cart-product-price`);
+  prodPrice.textContent = `₴${productData.price}`;
+
+  const removeProdBtn = cartProduct.querySelector(`.remove-product`);
+  removeProdBtn.addEventListener(`click`, removeFromCart);
+
+  cartProducts.appendChild(cartProduct);
+}
+
+function removeFromCart(event) {
+  const target = event.target;
+  const currentProduct = target.closest(`.cart-product`);
+  const productId = currentProduct.getAttribute(`data-id`);
+
+  const idToRemove = userCart.indexOf(productId);
+  if (idToRemove !== -1) {
+    userCart.splice(idToRemove, 1);
+  }
+  if (userCart.length == 0) {
+    hideElement(cartContainer);
+    showInfoMessage(`Ви видалили все з кошику!`);
+  }
+  calculateCartTotal();
+  currentProduct.remove();
 }
