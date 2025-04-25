@@ -521,7 +521,7 @@ getRate();
 
 // WEATHER TAB
 
-const weatherApiKey = "63991adcc0b6438c1d46d015771abc79";
+const weatherApiKey = "KEY";
 const lat = 46.4825;
 const lon = 30.7233;
 
