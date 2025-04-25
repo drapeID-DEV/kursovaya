@@ -521,44 +521,44 @@ getRate();
 
 // WEATHER TAB
 
-// const weatherApiKey = "63991adcc0b6438c1d46d015771abc79";
-// const lat = 46.4825;
-// const lon = 30.7233;
+const weatherApiKey = "63991adcc0b6438c1d46d015771abc79";
+const lat = 46.4825;
+const lon = 30.7233;
 
-// async function getWeather() {
-//   try {
-//     const res = await fetch(
-//       `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&exclude=minutely,hourly,daily,alerts&units=metric&lang=ua&appid=${weatherApiKey}`
-//     );
-//     const data = await res.json();
-//     console.log(data)
-//     const iconData = data.current.weather[0].icon;
-//     const iconUrl = `https://openweathermap.org/img/wn/${iconData}@2x.png`;
-//     const descriptionData = data.current.weather[0].description;
-//     const tempData = data.current.temp;
-//     const humidityData = data.current.humidity;
-//     const windData = data.current.wind_speed;
+async function getWeather() {
+  try {
+    const res = await fetch(
+      `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&exclude=minutely,hourly,daily,alerts&units=metric&lang=ua&appid=${weatherApiKey}`
+    );
+    const data = await res.json();
+    console.log(data)
+    const iconData = data.current.weather[0].icon;
+    const iconUrl = `https://openweathermap.org/img/wn/${iconData}@2x.png`;
+    const descriptionData = data.current.weather[0].description;
+    const tempData = data.current.temp;
+    const humidityData = data.current.humidity;
+    const windData = data.current.wind_speed;
 
-//     const iconBlock = weatherBlock.querySelector(`.weather-icon`);
-//     iconBlock.src = iconUrl;
+    const iconBlock = weatherBlock.querySelector(`.weather-icon`);
+    iconBlock.src = iconUrl;
 
-//     const descriptionBlock = weatherBlock.querySelector(`.weather-description`);
-//     descriptionBlock.textContent = descriptionData;
+    const descriptionBlock = weatherBlock.querySelector(`.weather-description`);
+    descriptionBlock.textContent = descriptionData;
 
-//     const temperatureBlock = weatherBlock.querySelector(`.temperature`);
-//     temperatureBlock.textContent = `${tempData.toFixed(1)}°С`;
+    const temperatureBlock = weatherBlock.querySelector(`.temperature`);
+    temperatureBlock.textContent = `${tempData.toFixed(1)}°С`;
 
-//     const humidityBlock = weatherBlock.querySelector(`.humidity`);
-//     humidityBlock.textContent = `Вологість: ${humidityData}%`;
+    const humidityBlock = weatherBlock.querySelector(`.humidity`);
+    humidityBlock.textContent = `Вологість: ${humidityData}%`;
 
-//     const speedBlock = weatherBlock.querySelector(`.wind-speed`);
-//     speedBlock.textContent = `Швидкість вітру: ${windData}м/с`
-//   } catch (err) {
-//     console.log("Помилка завантаження погоди!", err);
-//   }
-// }
+    const speedBlock = weatherBlock.querySelector(`.wind-speed`);
+    speedBlock.textContent = `Швидкість вітру: ${windData}м/с`
+  } catch (err) {
+    console.log("Помилка завантаження погоди!", err);
+  }
+}
 
-// getWeather();
+getWeather();
 
 //CONTACT US
 
